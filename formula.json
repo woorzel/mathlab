@@ -1,0 +1,7 @@
+{
+  "rawInput": "2/3",
+  "inputType": "ASCIIMATH",
+  "mathml": "<math><mfrac><mn>2</mn><mn>3</mn></mfrac></math>",
+  "speechText": "dwie trzecie",
+  "submissionId": 1
+}

@@ -1,0 +1,369 @@
+@import "tailwindcss";
+
+/* default app background — prefer darker base to match requested visual */
+body { background: linear-gradient(180deg,#0b1220 0%,#071826 55%,#071826 100%); color: #cbd5e1; }
+
+/* Narrator styles (minimal, high-contrast widget in corner) */
+.narrator-root {
+	position: fixed;
+	right: 16px;
+	bottom: 16px;
+	z-index: 10000;
+	font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+.narrator-toggle {
+	width: 46px;
+	height: 46px;
+	border-radius: 9999px;
+	border: 1px solid rgba(15,23,42,0.08);
+	background: white;
+	box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+.narrator-panel {
+	margin-top: 8px;
+	width: 320px;
+	max-width: calc(100vw - 40px);
+	background: rgba(255,255,255,0.06);
+	border-radius: 12px;
+	padding: 10px;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.28);
+	border: 1px solid rgba(255,255,255,0.04);
+	color: #e6eef8;
+}
+.narrator-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.narrator-btn { flex:1; padding:6px 8px; border-radius:8px; background:#111827; color:#fff; border:none; cursor:pointer; }
+.narrator-label { width:70px; font-size:13px; color:#374151; }
+.narrator-select { flex:1; padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; }
+.narrator-warning { color:#b91c1c; font-size:13px; margin-top:6px; }
+.narrator-hint { font-size:12px; color:#6b7280; margin-top:6px; }
+
+/* Skip link — visually hidden until focused (keyboard users) */
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.skip-link:focus,
+.skip-link:active {
+	left: 1rem;
+	top: 1rem;
+	width: auto;
+	height: auto;
+	padding: 8px 12px;
+	background: #111827;
+	color: #fff;
+	z-index: 9999;
+	border-radius: 6px;
+}
+
+/* Focus visibility for keyboard users — prefer clear outline that respects theme */
+:focus {
+	outline: 3px solid #2563eb; /* blue-600 */
+	outline-offset: 2px;
+}
+
+/* Make focus-visible less noisy for mouse users */
+:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* Small improvement: narrator toggle focus state */
+.narrator-toggle:focus {
+	box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
+}
+
+/* Strong dark overrides appended to ensure virtually no white islands remain
+	 when dark theme is active. These target common utility classes and form
+	 controls used throughout the app and intentionally use !important where
+	 needed to override Tailwind-generated styles. */
+
+[data-theme="dark"] .narrator-toggle {
+	border: 1px solid rgba(255,255,255,0.04) !important;
+	background: rgba(255,255,255,0.02) !important;
+	color: #e6eef8 !important;
+}
+
+[data-theme="dark"] .narrator-panel {
+	background: rgba(8,12,18,0.95) !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.36) !important;
+	color: #e6eef8 !important;
+}
+
+[data-theme="dark"] [class*="bg-white"] {
+	background-color: rgba(255,255,255,0.02) !important;
+	color: #cbd5e1 !important;
+	border-color: rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] [class*="text-slate-900"],
+[data-theme="dark"] .text-black {
+	color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] [class*="ring-slate-300"] {
+	box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset !important;
+	border-color: rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] [class*="bg-slate-50"] {
+	background-color: rgba(255,255,255,0.02) !important;
+}
+
+[data-theme="dark"] input, [data-theme="dark"] textarea, [data-theme="dark"] select, [data-theme="dark"] .input {
+	background: rgba(255,255,255,0.02) !important;
+	color: #e6eef8 !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] .badge, [data-theme="dark"] .rounded-full[class*="bg-"] {
+	background: rgba(255,255,255,0.03) !important;
+	color: #f9fafb !important; /* light text for dark mode badges */
+}
+
+[data-theme="dark"] .bg-slate-900 { background-color: rgba(12,18,30,0.9) !important; color:#e6eef8 !important; }
+
+[data-theme="dark"] .rounded-xl { background: rgba(255,255,255,0.02) !important; color: #e6eef8 !important; }
+
+[data-theme="dark"] .shadow-sm { box-shadow: 0 8px 22px rgba(2,6,23,0.5) !important; }
+
+/* Specific fixes for gradients and light-slate utilities used in the 'Nowe zadanie' panel */
+[data-theme="dark"] .bg-slate-50,
+[data-theme="dark"] .from-slate-50,
+[data-theme="dark"] .via-sky-50,
+[data-theme="dark"] .to-indigo-50,
+[data-theme="dark"] .bg-sky-50,
+[data-theme="dark"] .bg-white\/90,
+[data-theme="dark"] .bg-white\/80 {
+	background-image: none !important;
+	background-color: rgba(6,10,18,0.92) !important;
+	color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .border-slate-200,
+[data-theme="dark"] .ring-slate-200,
+[data-theme="dark"] .border-slate-300,
+[data-theme="dark"] .ring-slate-300 {
+	border-color: rgba(255,255,255,0.04) !important;
+	box-shadow: none !important;
+}
+
+[data-theme="dark"] .shadow-md { box-shadow: 0 12px 36px rgba(2,6,23,0.5) !important; }
+
+/* Target specific interactive areas to ensure clickable surfaces are dark */
+[data-theme="dark"] header.rounded-2xl,
+[data-theme="dark"] .group.relative.block.rounded-2xl,
+[data-theme="dark"] .mx-auto.max-w-6xl.p-4,
+[data-theme="dark"] .mx-auto.max-w-3xl.p-4 {
+	background: rgba(6,10,18,0.92) !important;
+	color: #e6eef8 !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.45) !important;
+}
+
+/* Tiles (the Link .group in TeacherHome) */
+[data-theme="dark"] a.group.relative.block.rounded-2xl {
+	background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+	color: #e6eef8 !important;
+}
+
+/* Hero header buttons */
+[data-theme="dark"] .rounded-xl.bg-sky-600,
+[data-theme="dark"] .rounded-xl.border {
+	background: rgba(255,255,255,0.03) !important;
+	color: #e6eef8 !important;
+	border-color: rgba(255,255,255,0.04) !important;
+}
+
+/* Nav pills (active and inactive) */
+[data-theme="dark"] .rounded-xl.px-3.py-1\.5.text-sm.font-semibold.ring-1 {
+	background: rgba(255,255,255,0.02) !important;
+	color: #cbd5e1 !important;
+	border-color: rgba(255,255,255,0.03) !important;
+}
+
+
+/* ------------------------------------------------------------------
+	 Final aggressive dark-mode fallbacks
+	 - Force virtually every element that uses Tailwind `bg-*` utilities to
+		 display a dark surface instead of white/gray islands.
+	 - Keep text readable and borders subtle.
+	 - This is intentionally broad; if any colored badges/icons need to keep
+		 their hue we can whitelist them afterwards.
+	 ------------------------------------------------------------------ */
+[data-theme="dark"] [class*="bg-"] {
+	background-color: rgba(6,10,18,0.86) !important;
+	color: #e6eef8 !important;
+	border-color: rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] .panel-elevated,
+[data-theme="dark"] .rounded-2xl,
+[data-theme="dark"] .card,
+[data-theme="dark"] .card-body,
+[data-theme="dark"] .card-panel,
+[data-theme="dark"] .container-panel,
+[data-theme="dark"] .panel {
+	background: rgba(6,10,18,0.9) !important;
+	color: #e6eef8 !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.45) !important;
+}
+
+[data-theme="dark"] .nav, [data-theme="dark"] .navbar, [data-theme="dark"] header {
+	background: rgba(6,10,18,0.94) !important;
+}
+
+[data-theme="dark"] .badge, [data-theme="dark"] .rounded-full {
+	background: rgba(255,255,255,0.04) !important;
+	color: #f9fafb !important; /* light text for dark mode badges */
+	border: 1px solid rgba(255,255,255,0.02) !important;
+}
+
+[data-theme="dark"] .btn-primary, [data-theme="dark"] .btn {
+	background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)) !important;
+	color: #e6eef8 !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] .tooltip, [data-theme="dark"] .popover {
+	background: rgba(6,10,18,0.94) !important;
+	color: #e6eef8 !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] svg, [data-theme="dark"] img { filter: none !important; }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+:root {
+	--bg-start: #f8fafc;
+	--bg-end: #eef6fb;
+	--primary-600: #0ea5e9; /* sky-500 / friendly blue */
+	--muted-700: #475569;
+	--card-bg: rgba(255,255,255,0.9);
+	--glass-border: rgba(15,23,42,0.06);
+}
+
+html, body, #root { height: 100%; }
+body {
+	font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: linear-gradient(180deg, var(--bg-start) 0%, #f1f5f9 55%, var(--bg-end) 100%);
+	color: #0f172a;
+	margin: 0;
+}
+
+/* Buttons */
+button, .btn {
+	transition: all .12s ease;
+	border-radius: 12px;
+}
+button:active { transform: translateY(1px) scale(0.998); }
+
+/* Cards / panels */
+.rounded-2xl {
+	border-radius: 16px !important;
+}
+.shadow-sm {
+	box-shadow: 0 6px 18px rgba(2,6,23,0.06) !important;
+}
+
+/* Links */
+a { color: var(--primary-600); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Utility to elevate important blocks */
+.panel-elevated { background: var(--card-bg); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; }
+
+/* Dark theme variables */
+[data-theme="dark"] {
+	--bg-start: #0b1220;
+	--bg-end: #071022;
+	--primary-600: #60a5fa;
+	--muted-700: #94a3b8;
+	--card-bg: rgba(6,10,18,0.7);
+	--glass-border: rgba(255,255,255,0.04);
+}
+
+/* Dark theme base styles */
+[data-theme="dark"] body {
+	background: linear-gradient(180deg, var(--bg-start) 0%, #07142a 55%, var(--bg-end) 100%);
+	color: #e6eef8;
+}
+[data-theme="dark"] .rounded-2xl { background: rgba(10,14,20,0.6); }
+[data-theme="dark"] .shadow-sm { box-shadow: 0 6px 18px rgba(2,6,23,0.4) !important; }
+[data-theme="dark"] a { color: var(--primary-600); }
+[data-theme="dark"] .narrator-panel { background: rgba(8,12,18,0.9); border: 1px solid rgba(255,255,255,0.04); }
+[data-theme="dark"] .narrator-btn { background: #0f172a; }
+
+/* Additional dark-mode harmonization for frequently-used light utilities */
+[data-theme="dark"] .bg-white {
+	background-color: rgba(255,255,255,0.02) !important;
+	color: #cbd5e1 !important;
+	border-color: rgba(255,255,255,0.04) !important;
+}
+
+[data-theme="dark"] button, [data-theme="dark"] .btn {
+	background: rgba(255,255,255,0.03);
+	color: #e6eef8;
+	border: 1px solid rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .rounded-2xl {
+	background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+	border: 1px solid rgba(255,255,255,0.04);
+}
+
+[data-theme="dark"] .panel-elevated { background: rgba(10,14,20,0.72); border: 1px solid rgba(255,255,255,0.04); }
+
+[data-theme="dark"] a { color: #60a5fa; }
+
+
+/* Narrator styles remain (kept for accessibility widget) */
+.narrator-root {
+	position: fixed;
+	right: 16px;
+	bottom: 16px;
+	z-index: 10000;
+	font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+.narrator-toggle {
+	width: 46px;
+	height: 46px;
+	border-radius: 9999px;
+	border: 1px solid rgba(15,23,42,0.08);
+	background: white;
+	box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+.narrator-panel {
+	margin-top: 8px;
+	width: 320px;
+	max-width: calc(100vw - 40px);
+	background: rgba(255,255,255,0.98);
+	border-radius: 12px;
+	padding: 10px;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+	border: 1px solid rgba(15,23,42,0.06);
+}
+.narrator-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.narrator-btn { flex:1; padding:6px 8px; border-radius:8px; background:#111827; color:#fff; border:none; cursor:pointer; }
+.narrator-label { width:70px; font-size:13px; color:#374151; }
+.narrator-select { flex:1; padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; }
+.narrator-warning { color:#b91c1c; font-size:13px; margin-top:6px; }
+.narrator-hint { font-size:12px; color:#6b7280; margin-top:6px; }
+/* Panel nauczyciela – jasny tekst w dark mode */
+[data-theme="dark"] .teacher-panel-badge {
+  color: #f9fafb !important; /* prawie białe */
+}

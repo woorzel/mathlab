@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mathlearn
+    username: ml
+    password: mlpass
+
+  jpa:
+    hibernate:
+      ddl-auto: update        # było: update
+    properties:
+      hibernate.format_sql: true
+      hibernate.jdbc.time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+app:
+  jwt:
+    secret: "wstaw_bardzo_długi_tajny_klucz_>=32_znaki"
+    expHours: 12
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
