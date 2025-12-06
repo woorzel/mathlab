@@ -1,29 +1,27 @@
 # ===== STAGE 1: build (Maven + JDK) =====
-FROM eclipse-temurin:17-jdk AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# skopiuj pliki mvnw, .mvn, pom.xml z backend/Mathla
-COPY backend/Mathla/mvnw .
-COPY backend/Mathla/.mvn .mvn
+# kopiujemy sam pom.xml z backend/Mathla
 COPY backend/Mathla/pom.xml .
 
-# uprawnienia i pobranie zależności
-RUN chmod +x mvnw
-RUN ./mvnw -q -Dmaven.test.skip=true dependency:go-offline
+# pobieramy zależności (cache'uje się osobno, więc kolejne buildy są szybsze)
+RUN mvn -q -Dmaven.test.skip=true dependency:go-offline
 
-# kod źródłowy
-COPY backend/Mathla/src src
+# kopiujemy kod źródłowy
+COPY backend/Mathla/src ./src
 
-# budowanie JAR
-RUN ./mvnw -q -DskipTests=true package
+# budujemy JAR
+RUN mvn -q -DskipTests package
 
 
-# ===== STAGE 2: runtime =====
+# ===== STAGE 2: runtime (tylko JRE + JAR) =====
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
+# kopiujemy zbudowany JAR z poprzedniego etapu
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
