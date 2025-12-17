@@ -14,7 +14,16 @@ const t = makeT('TeacherAssignments');
 
 /** Zwraca format używany w tym komponencie: "ASCIIMATH" | "MARKDOWN_TEX" */
 function getDefaultProbFmt() {
-  return localStorage.getItem(DF_KEY) === "ASCIIMATH" ? "ASCIIMATH" : "MARKDOWN_TEX";
+  try {
+    const stored = localStorage.getItem(DF_KEY);
+    // TeacherSettings zapisuje "ASCIIMATH" lub "TEX"
+    if (stored === "ASCIIMATH") return "ASCIIMATH";
+    if (stored === "TEX") return "MARKDOWN_TEX";
+    // domyślnie ASCIIMATH
+    return "ASCIIMATH";
+  } catch {
+    return "ASCIIMATH";
+  }
 }
 
 /* ========== Math helpers ========== */
@@ -125,8 +134,8 @@ export default function TeacherAssignments({ auth }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
-  // preferowany format dla NOWEGO zadania
-  const [probFmt, setProbFmt] = useState(getDefaultProbFmt());
+  // preferowany format dla NOWEGO zadania - leniwą inicjalizacją z localStorage
+  const [probFmt, setProbFmt] = useState(() => getDefaultProbFmt());
 
   async function refresh() {
     try {
@@ -152,11 +161,6 @@ export default function TeacherAssignments({ auth }) {
       alive = false;
     };
   }, [auth?.userId, auth?.token]);
-
-  // 2) po wejściu na stronę zastosuj preferencję z ustawień
-  useEffect(() => {
-    setProbFmt(getDefaultProbFmt());
-  }, []);
 
   // NEW (bez terminu)
   const [title, setTitle] = useState("");

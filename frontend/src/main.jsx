@@ -11,6 +11,11 @@ try {
   if (theme) document.documentElement.setAttribute('data-theme', theme);
 } catch {}
 
+// Set browser tab title to the app name
+try {
+  document.title = 'MathLab';
+} catch {}
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />

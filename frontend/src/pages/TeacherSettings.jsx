@@ -48,12 +48,19 @@ export default function TeacherSettings({ auth, onAuthUpdate }) {
   const [newPwd2, setNewPwd2] = useState("");
   const [pwdMsg, setPwdMsg] = useState("");
 
-  // Preferencje (wyłącznie format zadań). Initialize theme synchronously from localStorage
+  // Preferencje (wyłącznie format zadań). Initialize from localStorage
 // Preferencje tylko dla zadań
 const [prefs, setPrefs] = useState(() => {
-  return {
-    defaultFormat: "ASCIIMATH", // ASCIIMATH | TEX
-  };
+  try {
+    const stored = localStorage.getItem("prefs-defaultFormat");
+    return {
+      defaultFormat: stored || "ASCIIMATH", // ASCIIMATH | TEX
+    };
+  } catch {
+    return {
+      defaultFormat: "ASCIIMATH",
+    };
+  }
 });
 
 // Motyw jak u studenta
@@ -79,6 +86,13 @@ useEffect(() => {
   } catch {}
 }, [theme]);
 
+  // automatyczny zapis formatu zadań do localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('prefs-defaultFormat', prefs.defaultFormat);
+    } catch {}
+  }, [prefs.defaultFormat]);
+
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -98,6 +112,9 @@ useEffect(() => {
         }
 
         // 2) preferencje
+        // Priorytet: localStorage (aktualna zmiana użytkownika) > backend > domyślny ASCIIMATH
+        const lsDefault = localStorage.getItem("prefs-defaultFormat");
+        
         let p = null;
         try {
           p = await apiGet(`/api/users/me/prefs`, auth.token);
@@ -105,14 +122,11 @@ useEffect(() => {
           if (![404, 405, 501].includes(e?.status)) throw e;
         }
 
-        // fallback do localStorage jeśli backend nie ma prefs
-const lsDefault = localStorage.getItem("prefs-defaultFormat");
+        const merged = {
+          defaultFormat: lsDefault || p?.defaultFormat || "ASCIIMATH",
+        };
 
-const merged = {
-  defaultFormat: p?.defaultFormat || lsDefault || "ASCIIMATH",
-};
-
-if (alive) setPrefs(merged);
+        if (alive) setPrefs(merged);
       } catch {
           if (alive) setMsg(t('profileFetchFailed'));
       } finally {

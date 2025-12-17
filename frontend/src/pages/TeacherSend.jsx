@@ -201,22 +201,22 @@ export default function TeacherSend({ auth }) {
         <TeacherNav />
 
 {/* HERO */}
-<header className="mt-6 rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm ring-1 ring-slate-200 dark:ring-slate-700">
+<header className="mt-6 rounded-2xl bg-white/80 backdrop-blur-sm shadow-sm ring-1 ring-slate-200">
   <div className="relative overflow-hidden rounded-2xl">
-    <div className="absolute inset-x-0 -top-10 h-24 bg-gradient-to-r from-sky-200/30 via-indigo-200/30 to-cyan-200/30 dark:from-sky-500/20 dark:via-indigo-500/20 dark:to-cyan-500/20 blur-2xl" />
+    <div className="absolute inset-x-0 -top-10 h-24 bg-gradient-to-r from-sky-200/30 via-indigo-200/30 to-cyan-200/30 blur-2xl" />
     <div className="relative grid gap-2 p-6 md:grid-cols-[1fr_auto] md:items-center">
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900">
           {t('assignTaskTitle')}
         </h1>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+        <p className="mt-1 text-sm text-slate-600">
           {t('assignTaskTitle') === 'Assign task'
             ? 'Select students from groups and assign them an assignment. You also set the deadline for that package here.'
             : 'Wybierz uczniów z grup i przydziel im zadanie. Tutaj ustawiasz też termin dla tego wysyłanego pakietu.'}
         </p>
       </div>
       <div className="flex justify-start gap-2 md:justify-end">
-        <span className="teacher-panel-badge rounded-full bg-sky-600/10 px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200 dark:text-white dark:bg-sky-500/20 dark:ring-sky-500/50">
+        <span className="rounded-full bg-sky-600/10 px-3 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
           {(() => {
             const s = t('teacherPanelBadge');
             if (!String(s || '').trim() || s === 'teacherPanelBadge') {

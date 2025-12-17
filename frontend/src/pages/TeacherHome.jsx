@@ -7,6 +7,7 @@ import TeacherNav from "../components/TeacherNav.jsx";
 // simple per-file i18n: read 'lang' from localStorage ('pl' | 'en')
 import { makeT } from "../i18n";
 const t = makeT('TeacherHome');
+const APP_NAME = 'MathLab';
 
 export default function TeacherHome({ auth }) {
   const [pendingCount, setPendingCount] = useState(null); // SUBMITTED
@@ -34,6 +35,13 @@ export default function TeacherHome({ auth }) {
     })();
     return () => { alive = false; };
   }, [auth?.userId, auth?.token]);
+
+  // Ustaw tytuł strony dla panelu nauczyciela
+  useEffect(() => {
+    try {
+      document.title = `${APP_NAME} – ${t('pageTitle')}`;
+    } catch {}
+  }, []);
 
   return (
     <div className="relative min-h-[100svh] overflow-x-hidden">

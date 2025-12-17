@@ -5,6 +5,7 @@ import { apiGet } from "../api";
 import StudentNav from "../components/StudentNav";
 import { makeT } from "../i18n";
 const t = makeT('StudentHome');
+const APP_NAME = 'MathLab';
 
 /* helpers */
 const effectiveDue = (a) => a?.studentDueAt || a?.dueAt || null;
@@ -41,6 +42,13 @@ export default function StudentHome({ auth }) {
     })();
     return () => { alive = false; };
   }, [auth?.userId, auth?.token]);
+
+  // Ustaw tytuł strony dla panelu ucznia
+  useEffect(() => {
+    try {
+      document.title = `${APP_NAME} – ${t('title')}`;
+    } catch {}
+  }, []);
 
   // najnowsze zgłoszenie per zadanie (po id)
   const latestSubByA = useMemo(() => {

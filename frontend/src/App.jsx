@@ -55,9 +55,9 @@ export default function App() {
 
   function roleLabel(role) {
     if (role === "TEACHER")
-      return lang === "en" ? "TEACHER" : "NAUCZYCIEL";
+      return lang === "en" ? "TEACHER" : "nauczyciel";
     if (role === "STUDENT")
-      return lang === "en" ? "STUDENT" : "UCZEŃ";
+      return lang === "en" ? "STUDENT" : "uczeń";
     return role || "";
   }
 
@@ -94,6 +94,13 @@ export default function App() {
       } catch {}
     })();
   }, [auth]);
+
+  // update tab title with localized role (PL: Nauczyciel/UCZEŃ)
+  useEffect(() => {
+    const base = "MathLab";
+    const suffix = auth ? ` – ${roleLabel(auth.role)}` : "";
+    try { document.title = base + suffix; } catch {}
+  }, [auth, lang]);
 
   return (
     <BrowserRouter>

@@ -308,12 +308,16 @@ export default function StudentHomework({ auth }) {
   const afterDue =
     !!activeAssignment?.studentDueAt &&
     isPast(activeAssignment.studentDueAt);
+  // Zasady blokady edycji:
+  // - Jeśli UCZEŃ nie rozpoczął (brak currentSub) i otwiera podgląd, pole ma być zablokowane.
+  // - Jeśli istnieje zgłoszenie i ma status SUBMITTED/GRADED, zablokuj.
+  // - Jeśli termin minął, zablokuj zarówno brak rozpoczęcia jak i podgląd.
   const locked =
-    afterDue ||
     (!currentSub && previewOnly) ||
     (!!currentSub &&
       (currentSub.status === "SUBMITTED" ||
-        currentSub.status === "GRADED"));
+        currentSub.status === "GRADED")) ||
+    (afterDue && (!currentSub || previewOnly));
 
   function openAssignment(a, { readonlyIfNotStarted = true } = {}) {
     setActive(a.id);
@@ -683,9 +687,9 @@ export default function StudentHomework({ auth }) {
                     >
                       {t("sendForReviewBtn")}
                     </button>
-                    {previewOnly && (
+                    {afterDue && (!currentSub || previewOnly) && (
                       <div
-                        className="text-xs text-amber-400 flex items-center"
+                        className="text-xs text-amber-600 flex items-center"
                         role="status"
                         aria-live="polite"
                       >

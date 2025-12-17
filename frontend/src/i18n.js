@@ -623,8 +623,8 @@ export const STR = {
       nameLabel: 'Imię i nazwisko',
       namePlaceholder: 'np. Jan Kowalski',
       roleLabel: 'Rola',
-      roleStudent: 'STUDENT',
-      roleTeacher: 'TEACHER',
+      roleStudent: 'uczeń',
+      roleTeacher: 'nauczyciel',
 
       minPasswordMsg: 'Hasło musi mieć co najmniej 8 znaków.',
       emailRequired: 'Podaj adres e-mail.',
@@ -634,6 +634,13 @@ export const STR = {
       invalidCreds: 'Nieprawidłowe dane logowania.',
       emailUsed: 'Adres e-mail jest już użyty.',
       genericError: 'Wystąpił błąd podczas logowania.',
+
+      heroMainDesc: 'Nauczyciel wysyła zadania, uczeń je rozwiązuje i dostaje ocenę.',
+      heroSubDesc: 'Aplikacja dla uczniów szkoły podstawowej — przyjazne zadania i szybki podgląd odpowiedzi.',
+      heroBullet1: 'Nauczyciel: tworzy i wysyła zadania do grup',
+      heroBullet2: 'Uczeń: rozpoczyna, rozwiązuje i oddaje zadanie',
+      heroBullet3: 'Oceny zamiast punktów — prosto i czytelnie',
+      heroBullet4: 'Podgląd odpowiedzi i czytanie na głos',
     },
     en: {
       registerTitle: 'Create account',
@@ -665,6 +672,13 @@ export const STR = {
       invalidCreds: 'Invalid credentials.',
       emailUsed: 'Email already used.',
       genericError: 'An error occurred while signing in.',
+
+      heroMainDesc: 'Teachers assign tasks; students solve them and receive grades.',
+      heroSubDesc: 'For primary school students — friendly tasks with instant answer preview.',
+      heroBullet1: 'Teachers: create and send tasks to groups',
+      heroBullet2: 'Students: start, solve, and submit tasks',
+      heroBullet3: 'Grades instead of points — simple and clear',
+      heroBullet4: 'Answer preview and read‑aloud support',
     }
   },
 
