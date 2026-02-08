@@ -9,10 +9,10 @@ RUN npm run build
 # ===== 2) build back =====
 FROM maven:3.9-eclipse-temurin-21 AS back
 WORKDIR /app
-COPY backend/pom.xml backend/pom.xml
-COPY backend/src backend/src
+COPY backend/Mathla/pom.xml backend/pom.xml
+COPY backend/Mathla/src backend/src
 # wrzuć zbudowany front do zasobów Springa
-COPY --from=front /app/frontend/dist backend/src/main/resources/static
+COPY --from=front /app/frontend/dist backend/Mathla/src/main/resources/static
 WORKDIR /app/backend
 RUN mvn -DskipTests package
 
