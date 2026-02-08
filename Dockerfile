@@ -1,26 +1,29 @@
-# ===== 1) build front =====
-FROM node:20-alpine AS front
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm ci
-COPY frontend/ ./
-RUN npm run build
+# ===== STAGE 1: build (Maven + JDK 21) =====
+FROM maven:3.9-eclipse-temurin-21 AS build
 
-# ===== 2) build back =====
-FROM maven:3.9-eclipse-temurin-21 AS back
 WORKDIR /app
-COPY backend/Mathla/pom.xml backend/pom.xml
-COPY backend/Mathla/src backend/src
-# wrzuć zbudowany front do zasobów Springa
-COPY --from=front /app/frontend/dist backend/Mathla/src/main/resources/static
-WORKDIR /app/backend
-RUN mvn -DskipTests package
 
-# ===== 3) runtime =====
+# kopiujemy pom.xml z backend/Mathla
+COPY backend/Mathla/pom.xml .
+
+# pobieramy zależności (cache)
+RUN mvn -q -Dmaven.test.skip=true dependency:go-offline
+
+# kopiujemy kod źródłowy
+COPY backend/Mathla/src ./src
+
+# budujemy JAR (bez testów)
+RUN mvn -q -DskipTests package
+
+
+# ===== STAGE 2: runtime (JRE 21 + JAR) =====
 FROM eclipse-temurin:21-jre
+
 WORKDIR /app
-COPY --from=back /app/backend/target/*.jar app.jar
-# Render/Railway często ustawiają PORT env
-ENV SERVER_PORT=8080
+
+# kopiujemy zbudowany JAR z poprzedniego etapu
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
-CMD ["sh","-c","java -jar app.jar --server.port=${PORT:-8080}"]
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
