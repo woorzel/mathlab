@@ -635,8 +635,8 @@ export const STR = {
       emailUsed: 'Adres e-mail jest już użyty.',
       genericError: 'Wystąpił błąd podczas logowania.',
 
-      heroMainDesc: 'Nauczyciel wysyła zadania, uczeń je rozwiązuje i dostaje ocenę.',
-      heroSubDesc: 'Aplikacja dla uczniów szkoły podstawowej — przyjazne zadania i szybki podgląd odpowiedzi.',
+      heroMainDesc: 'Przyjazna aplikacja do zadań matematycznych dla uczniów szkoły podstawowej.',
+      heroSubDesc: 'Nauczyciel wysyła zadania, uczeń je rozwiązuje i dostaje ocenę.',
       heroBullet1: 'Nauczyciel: tworzy i wysyła zadania do grup',
       heroBullet2: 'Uczeń: rozpoczyna, rozwiązuje i oddaje zadanie',
       heroBullet3: 'Oceny zamiast punktów — prosto i czytelnie',
@@ -673,8 +673,8 @@ export const STR = {
       emailUsed: 'Email already used.',
       genericError: 'An error occurred while signing in.',
 
-      heroMainDesc: 'Teachers assign tasks; students solve them and receive grades.',
-      heroSubDesc: 'For primary school students — friendly tasks with instant answer preview.',
+      heroMainDesc: 'Friendly math assignments app for primary school students.',
+      heroSubDesc: 'Teachers assign tasks; students solve them and receive grades.',
       heroBullet1: 'Teachers: create and send tasks to groups',
       heroBullet2: 'Students: start, solve, and submit tasks',
       heroBullet3: 'Grades instead of points — simple and clear',

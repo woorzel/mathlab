@@ -1,0 +1,37 @@
+@startuml
+
+
+hide footbox
+skinparam maxMessageSize 30
+skinparam ParticipantPadding 10
+
+actor S as "Uczeń"
+participant FE as "Frontend\n(StudentHomework.jsx)"
+participant API as "API client\n(apiPost/apiPut)"
+participant SC as "Backend\n(SubmissionController)"
+database DB as "SubmissionRepository"
+
+== Rozpoczęcie ==
+S -> FE : klik "Start"
+FE -> API : POST /api/submissions/start\n{assignmentId, studentId}
+API -> SC : start(req)
+SC -> DB : save(status=DRAFT)
+DB --> SC : submissionId
+SC --> API : 200 (id)
+API --> FE : id
+
+== Oddanie ==
+S -> FE : uzupełnia odpowiedzi\nklik "Wyślij"
+FE -> API : PUT /api/submissions/{id}\n{status=SUBMITTED, textAnswer}
+API -> SC : update(id, body)
+SC -> DB : update(status, textAnswer)
+DB --> SC : OK
+
+alt termin minął
+  SC -> DB : oznacz spóźnienie\n(flag/status wg logiki)
+end
+
+SC --> API : 200 (SUBMITTED)
+API --> FE : wynik
+FE -> FE : blokada edycji\n+ komunikat
+@enduml

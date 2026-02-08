@@ -1,0 +1,35 @@
+@startuml
+
+
+hide footbox
+skinparam maxMessageSize 30
+skinparam ParticipantPadding 10
+
+actor T as "Nauczyciel"
+participant FE as "Frontend\n(TeacherSend.jsx)"
+participant API as "API client\n(apiPost)"
+participant BE as "Backend\n(AssignmentController)"
+
+T -> FE : wybór zadania i uczniów\n+ termin (opcjonalnie)\nklik „Przydziel”
+FE -> API : POST /api/assignments/{id}/students
+note over FE,API
+AssignStudentsRequest\n{ studentIds[], dueAt? }
+end note
+
+API -> BE : assignToStudents(id, req)
+BE -> BE : walidacja i zapis przydziałów
+
+note right of BE
+W pętli po studentIds:
+- brak użytkownika → "brak"
+- rola != STUDENT → "zlaRola"
+- duplikat → "duplikaty"
+- inaczej → zapis + "dodani"
+end note
+
+BE --> API : 200 OK\n{dodani, brak, zlaRola, duplikaty}
+API --> FE : wynik
+FE -> FE : komunikat + odświeżenie widoku
+
+@enduml
+

@@ -1,0 +1,121 @@
+@startuml
+
+' --- ustawienia czytelności na A4 ---
+left to right direction
+hide circle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam RoundCorner 10
+skinparam DefaultFontSize 12
+skinparam ArrowColor #444
+skinparam EntityBorderColor #444
+skinparam EntityBackgroundColor #FFFFFF
+
+' Crow's Foot
+!define TABLE(x) entity x as "x" << (T,#FFFFFF) >>
+!define PK(x) <b>x</b>
+!define FK(x) <i>x</i>
+
+' =======================
+' Tabele
+' =======================
+
+TABLE(users) {
+  PK(id) : BIGSERIAL
+  --
+  email : CITEXT <<UNIQUE>>
+  password_hash : TEXT
+  role : user_role
+  name : TEXT
+  created_at : TIMESTAMPTZ
+}
+
+TABLE(assignments) {
+  PK(id) : BIGSERIAL
+  --
+  FK(teacher_id) : BIGINT
+  title : TEXT
+  description : TEXT NULL
+  due_at : TIMESTAMPTZ NULL
+  created_at : TIMESTAMPTZ
+}
+
+TABLE(problems) {
+  PK(id) : BIGSERIAL
+  --
+  FK(assignment_id) : BIGINT
+  FK(author_id) : BIGINT NULL
+  content : TEXT
+  format : TEXT
+  created_at : TIMESTAMPTZ
+}
+
+TABLE(submissions) {
+  PK(id) : BIGSERIAL
+  --
+  FK(assignment_id) : BIGINT
+  FK(student_id) : BIGINT
+  text_answer : TEXT NULL
+  grade : NUMERIC(4,2) NULL
+  score : NUMERIC(5,2) NULL
+  feedback : TEXT NULL
+  status : TEXT
+  review_note : VARCHAR(1000) NULL
+  created_at : TIMESTAMPTZ
+  submitted_at : TIMESTAMPTZ NULL
+}
+
+TABLE(groups) {
+  PK(id) : BIGSERIAL
+  --
+  name : TEXT
+  FK(teacher_id) : BIGINT
+}
+
+TABLE(group_students) {
+  PK(id) : BIGSERIAL
+  --
+  FK(group_id) : BIGINT
+  FK(student_id) : BIGINT
+  --
+  UNIQUE(group_id, student_id)
+}
+
+TABLE(assignment_students) {
+  PK(id) : BIGSERIAL
+  --
+  FK(assignment_id) : BIGINT
+  FK(student_id) : BIGINT
+  due_at : TIMESTAMPTZ NULL
+  created_at : TIMESTAMPTZ
+  --
+  UNIQUE(assignment_id, student_id)
+}
+
+' =======================
+' Relacje (krotność)
+' =======================
+
+' Nauczyciel tworzy wiele zadań
+users ||--o{ assignments : teacher_id
+
+' Zadanie ma (zwykle) 1 problem, ale w bazie to jest 1..* (jeśli dopuszczasz wiele Problemów)
+assignments ||--o{ problems : assignment_id
+users ||--o{ problems : author_id
+
+' Uczeń wysyła wiele zgłoszeń; zadanie ma wiele zgłoszeń
+users ||--o{ submissions : student_id
+assignments ||--o{ submissions : assignment_id
+
+' Grupa należy do nauczyciela
+users ||--o{ groups : teacher_id
+
+' Członkostwo ucznia w grupach (M:N)
+groups ||--o{ group_students : group_id
+users  ||--o{ group_students : student_id
+
+' Przydzielenia zadań uczniom (M:N + atrybut due_at)
+assignments ||--o{ assignment_students : assignment_id
+users       ||--o{ assignment_students : student_id
+
+@enduml

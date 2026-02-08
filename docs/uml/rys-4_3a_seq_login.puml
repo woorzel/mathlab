@@ -1,0 +1,42 @@
+@startuml
+
+
+hide footbox
+skinparam maxMessageSize 40
+skinparam ParticipantPadding 18
+
+actor U as "Użytkownik"
+participant FE as "Frontend\n(LoginForm.jsx)"
+participant API as "API client\n(apiPost)"
+participant AC as "AuthController"
+participant UR as "UserRepository"
+participant PWD as "PasswordEncoder"
+participant JWT as "JwtService"
+
+U -> FE : klik „Zaloguj”
+FE -> FE : walidacja hasła (min. 8 znaków)
+
+FE -> API : POST /api/auth/login
+note over FE,API
+{ email, password }
+end note
+
+API -> AC : LoginRequest
+AC -> UR : findByEmail(email)
+UR --> AC : User(id, role, hash)
+AC -> PWD : matches(password, hash)
+PWD --> AC : true
+
+AC -> JWT : generateToken(userId, role)
+JWT --> AC : token JWT
+
+AC --> API : 200 OK (TokenResponse)
+note over API,FE
+{ token, role, userId, email }
+end note
+
+API --> FE : TokenResponse
+FE -> FE : onLogged()\n(zapis tokenu)
+FE -> FE : przekierowanie wg roli\nTEACHER → /t/start\nSTUDENT → /student
+
+@enduml

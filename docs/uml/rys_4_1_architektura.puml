@@ -1,0 +1,32 @@
+@startuml
+
+
+skinparam componentStyle rectangle
+
+package "Frontend (React)" {
+  [Pages (Teacher)] as FE_T
+  [Pages (Student)] as FE_S
+  [Narrator] as FE_N
+  [API client] as FE_API
+}
+
+package "Backend (Spring Boot)" {
+  [REST API Controllers] as BE_API
+  [Security (Spring Security + JWT)] as BE_SEC
+  [Services] as BE_SVC
+  [Repositories (JPA)] as BE_REPO
+}
+
+database "PostgreSQL" as DB
+
+FE_T --> FE_API
+FE_S --> FE_API
+FE_API --> BE_API : HTTPS/JSON
+BE_API --> BE_SEC
+BE_API --> BE_SVC
+BE_SVC --> BE_REPO
+BE_REPO --> DB
+
+FE_N ..> FE_T
+FE_N ..> FE_S
+@enduml

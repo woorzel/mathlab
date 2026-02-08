@@ -1,0 +1,32 @@
+@startuml
+
+
+hide footbox
+skinparam maxMessageSize 30
+skinparam ParticipantPadding 10
+
+actor T as "Nauczyciel"
+participant FE as "Frontend\n(TeacherGrading.jsx)"
+participant API as "API client\n(apiGet/apiPut)"
+participant SC as "Backend\n(SubmissionController)"
+database DB as "SubmissionRepository"
+
+== Pobranie zgłoszeń ==
+T -> FE : otwiera zakładkę "Ocenianie"
+FE -> API : GET /api/submissions?status=SUBMITTED\n(lub assignmentId=...)
+API -> SC : list(...)
+SC -> DB : findBy...(SUBMITTED)
+DB --> SC : lista zgłoszeń
+SC --> API : 200 (lista)
+API --> FE : lista
+
+== Ocena ==
+T -> FE : wybiera zgłoszenie\nwpisuje ocenę + komentarz\nklik "Oceń"
+FE -> API : PUT /api/submissions/{id}/grade\n{score, reviewNote, status=GRADED, teacherId}
+API -> SC : grade(id, body)
+SC -> DB : update(score, note, status=GRADED)
+DB --> SC : OK
+SC --> API : 200 (SubmissionResponse)
+API --> FE : wynik
+FE -> FE : przenieś do archiwum\n+ komunikat (toast)
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+
+
+hide footbox
+skinparam maxMessageSize 40
+skinparam ParticipantPadding 18
+
+actor U as "Użytkownik"
+participant FE as "Frontend\n(LoginForm.jsx)"
+participant API as "API client\n(apiPost)"
+participant AC as "AuthController"
+participant UR as "UserRepository"
+participant PWD as "PasswordEncoder"
+
+U -> FE : klik „Zaloguj”
+FE -> FE : walidacja hasła (min. 8 znaków)
+
+alt hasło < 8 znaków
+  FE -> FE : komunikat błędu\n(UI + toast)
+else walidacja OK
+  FE -> API : POST /api/auth/login
+  note over FE,API
+  { email, password }
+  end note
+
+  API -> AC : LoginRequest
+  AC -> UR : findByEmail(email)
+  UR --> AC : User(id, hash)
+  AC -> PWD : matches(password, hash)
+  PWD --> AC : false
+
+  AC --> API : 401 Unauthorized
+  API --> FE : błąd autoryzacji
+  FE -> FE : komunikat + toast
+end
+
+@enduml

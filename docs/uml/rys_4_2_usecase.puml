@@ -1,0 +1,58 @@
+@startuml
+left to right direction
+
+actor "Nauczyciel" as T
+actor "Uczeń" as S
+
+rectangle "MathLab" {
+
+  usecase "Rejestracja" as UC_REG
+  usecase "Logowanie" as UC_LOGIN
+
+  usecase "Tworzenie zadania" as UC_CREATE_A
+  usecase "Edycja zadania" as UC_EDIT_A
+  usecase "Tworzenie grupy" as UC_CREATE_G
+  usecase "Dodanie ucznia\ndo grupy" as UC_ADD_STU
+  usecase "Wysyłka zadania" as UC_SEND
+  usecase "Ocenianie rozwiązania" as UC_GRADE
+  usecase "Dziennik / statystyki" as UC_JOURNAL
+
+  usecase "Rozpoczęcie zadania" as UC_START
+  usecase "Wysłanie rozwiązania" as UC_SUBMIT
+  usecase "Przegląd ocen" as UC_GRADES
+  usecase "Przegląd statystyk" as UC_STATS
+  usecase "Przegląd grup" as UC_GROUPS
+
+  usecase "Narrator\n(odczyt treści)" as UC_NARR
+  usecase "Oznaczenie spóźnienia" as UC_LATE
+}
+
+' --- Rejestracja i logowanie (obie role)
+T --> UC_REG
+S --> UC_REG
+T --> UC_LOGIN
+S --> UC_LOGIN
+
+' --- Funkcje nauczyciela
+T --> UC_CREATE_A
+T --> UC_EDIT_A
+T --> UC_CREATE_G
+T --> UC_ADD_STU
+T --> UC_SEND
+T --> UC_GRADE
+T --> UC_JOURNAL
+
+' --- Funkcje ucznia
+S --> UC_START
+S --> UC_SUBMIT
+S --> UC_GRADES
+S --> UC_STATS
+S --> UC_GROUPS
+
+' --- Dostępność
+T --> UC_NARR
+S --> UC_NARR
+
+' --- Logika systemowa
+UC_LATE ..> UC_SUBMIT : <<extend>>
+@enduml
